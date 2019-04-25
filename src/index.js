@@ -1,6 +1,7 @@
 import cbtTunnels from 'cbt_tunnels';
 import webdriver from 'selenium-webdriver';
 import { cbtCapabilities } from './browser-capabilities';
+import { fetchCBTBrowsers } from './browser-list';
 
 const cbtHub = "http://hub.crossbrowsertesting.com:80/wd/hub";
 
@@ -16,6 +17,9 @@ const cbtTunnelOptions = {
 };
 
 export default {
+  openedBrowsers: {},
+  availableBrowserNames: [],
+
   // Multiple browsers support
   isMultiBrowser: true,
 
@@ -36,7 +40,7 @@ export default {
   // Optional - implement methods you need, remove other methods
   // Initialization
   async init() {
-    return;
+    this.availableBrowserNames = await fetchCBTBrowsers();
   },
 
   async dispose() {
@@ -45,11 +49,11 @@ export default {
 
   // Browser names handling
   async getBrowserList() {
-    throw new Error('Not implemented!');
+    return this.availableBrowserNames;
   },
 
-  async isValidBrowserName(/* browserName */) {
-    return true;
+  async isValidBrowserName(browserName) {
+    return this.availableBrowserNames.includes(browserName);
   },
 
   // Extra methods
