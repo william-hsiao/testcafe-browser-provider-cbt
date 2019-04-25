@@ -1,8 +1,18 @@
-import cbt from 'cbt_tunnels';
+import cbtTunnels from 'cbt_tunnels';
+import webdriver from 'selenium-webdriver';
+import { cbtCapabilities } from './browser-capabilities';
 
-const cbtOptions = {
-  username: process.env.CBT_TUNNELS_USERNAME,
-  authkey:  ''
+const cbtHub = "http://hub.crossbrowsertesting.com:80/wd/hub";
+
+const cbtUsername = process.env.CBT_USERNAME;
+const cbtAuthKey = process.env.CBT_AUTHKEY;
+
+
+const cbtTunnelOptions = {
+  username: cbtUsername,
+  authkey:  cbtAuthKey,
+
+  tunnelname: '',
 };
 
 export default {
@@ -12,7 +22,10 @@ export default {
   // Required - must be implemented
   // Browser control
   async openBrowser(/* id, pageUrl, browserName */) {
-    cbt.start(cbtOptions, err => {});
+    // cbtTunnels.start(cbtOptions, err => {});
+    try {
+      let browser = new webdriver.Builder().usingServer(cbtHub).withCapabilities()
+    }
     throw new Error('Not implemented!');
   },
 
