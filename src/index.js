@@ -2,19 +2,12 @@ import cbtTunnels from 'cbt_tunnels';
 import webdriver from 'selenium-webdriver';
 import { cbtCapabilities } from './browser-capabilities';
 import { fetchCBTBrowsers } from './browser-list';
+import { tunnelOptions } from './tunnel-options';
 
 const cbtHub = "http://hub.crossbrowsertesting.com:80/wd/hub";
 
 const cbtUsername = process.env.CBT_USERNAME;
 const cbtAuthKey = process.env.CBT_AUTHKEY;
-
-
-const cbtTunnelOptions = {
-  username: cbtUsername,
-  authkey:  cbtAuthKey,
-
-  tunnelname: '',
-};
 
 export default {
   openedBrowsers: {},
@@ -25,12 +18,22 @@ export default {
 
   // Required - must be implemented
   // Browser control
-  async openBrowser(/* id, pageUrl, browserName */) {
-    // cbtTunnels.start(cbtOptions, err => {});
-    try {
-      let browser = new webdriver.Builder().usingServer(cbtHub).withCapabilities()
-    }
-    throw new Error('Not implemented!');
+  async openBrowser(id, pageUrl, browserName) {
+    const tunnelName = `cbt_tunnel:${id}`;
+
+    cbtTunnels.start(tunnelOptions({
+      username: cbtUsername,
+      authkey: cbtAuthKey,
+      tunnelName
+    }), async (err) => {
+      if (err) return
+
+      try {
+        let browser = new webdriver.Builder().usingServer(cbtHub).withCapabilities()
+      } catch (err) {
+        throw new Error(err);
+      }
+    });
   },
 
   async closeBrowser(/* id */) {
