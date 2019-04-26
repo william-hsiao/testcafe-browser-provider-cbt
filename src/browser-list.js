@@ -4,7 +4,7 @@ export async function fetchCBTBrowsers() {
   return request({
     uri: 'http://crossbrowsertesting.com/api/v3/selenium/browsers',
     json: true,
-    transform: (body, response, resolveWithFullResponse) => {
+    transform: (body) => {
       const browserList = [];
   
       body.forEach(item => {
@@ -14,8 +14,8 @@ export async function fetchCBTBrowsers() {
           } else {
             browserList.push(`${browser.caps.browserName}@${browser.caps.version}:${item.caps.platform}`);
           }
-        })
-      })
+        });
+      });
   
       return browserList;
     }

@@ -1,10 +1,12 @@
+/* eslint-disable */
+
 import cbtTunnels from 'cbt_tunnels';
 import webdriver from 'selenium-webdriver';
 import { cbtCapabilities } from './browser-capabilities';
 import { fetchCBTBrowsers } from './browser-list';
 import { tunnelOptions } from './tunnel-options';
 
-const cbtHub = "http://hub.crossbrowsertesting.com:80/wd/hub";
+const cbtHub = 'http://hub.crossbrowsertesting.com:80/wd/hub';
 
 const cbtUsername = process.env.CBT_USERNAME;
 const cbtAuthKey = process.env.CBT_AUTHKEY;
@@ -26,12 +28,12 @@ export default {
       authkey: cbtAuthKey,
       tunnelName
     }), async (err) => {
-      if (err) return
+      if (err) return;
 
       try {
-        let browser = new webdriver.Builder().usingServer(cbtHub).withCapabilities()
-      } catch (err) {
-        throw new Error(err);
+        // const browser = new webdriver.Builder().usingServer(cbtHub).withCapabilities();
+      } catch (error) {
+        throw new Error(error);
       }
     });
   },

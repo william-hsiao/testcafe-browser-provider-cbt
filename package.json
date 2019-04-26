@@ -13,6 +13,7 @@
     "lib"
   ],
   "scripts": {
+    "build": "gulp build",
     "test": "gulp test",
     "publish-please": "publish-please",
     "prepublish": "publish-please guard"

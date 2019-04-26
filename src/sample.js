@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 // Basic - Selenium Example Script
 // see https://github.com/SeleniumHQ/selenium/wiki/WebDriverJs for details
 // runs test against http://crossbrowsertesting.github.io/selenium_example_page.html
@@ -17,11 +19,11 @@ var caps = {
   browserName: 'Chrome',
   version: '73x64',
   platform: 'Windows 10',
-  screenResolution: '1366x768'
+  screenResolution: '1366x768',
+  username,
+  password: authkey,
 };
 
-caps.username = username;
-caps.password = authkey;
 
 var sessionId = null;
 
@@ -103,7 +105,7 @@ function setScore(score) {
     } else {
       result.error = true;
       result.message = 'Session Id was not defined';
-      deferred.fulfill(result);
+      // deferred.fulfill(result);
     }
 
     result.error ? fulfill('Fail') : resolve('Pass');

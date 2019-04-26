@@ -4,5 +4,5 @@ export const tunnelOptions = params => {
     username: params.username,
     authkey:  params.authkey,
     tunnelname: params.tunnelName,
-  }
+  };
 };

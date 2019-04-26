@@ -42,10 +42,8 @@
     "space-infix-ops": "error",
     "space-unary-ops": ["error", { "words": true, "nonwords": false }],
     "yoda": ["error", "never"],
-    "brace-style": ["error", "stroustrup", { "allowSingleLine": false }],
     "eol-last": "error",
     "indent": ["error", 2, { "SwitchCase": 1 }],
-    "key-spacing": ["error", { "align": "value" }],
     "max-nested-callbacks": ["error", 3],
     "new-parens": "error",
     "newline-after-var": ["error", "always"],
@@ -63,7 +61,6 @@
     "no-path-concat": "error",
     "no-undefined": "error",
     "strict": "off",
-    "curly": ["error", "multi-or-nest"],
     "dot-notation": "off",
     "no-else-return": "error",
     "one-var": ["error", "never"],
@@ -79,9 +76,9 @@
     "radix": "error",
     "no-extra-parens": "error",
     "new-cap": ["error", { "capIsNew": false }],
-    // "space-before-function-paren": ["error", "always"],
     "no-use-before-define": ["error", "nofunc"],
-    "handle-callback-err": "off"
+    "handle-callback-err": "off",
+    "require-yield": 0
   },
   "env": {
     "node": true
