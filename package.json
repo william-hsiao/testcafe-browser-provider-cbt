@@ -1,9 +1,9 @@
 {
   "name": "testcafe-browser-provider-cbt",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "CrossBrowserTesting TestCafe browser provider plugin.",
-  "repository": "https://github.com/william-hsiao/testcafe-browser-provider-crossbrowsertesting",
-  "homepage": "https://crossbrowsertesting.com",
+  "repository": "https://github.com/william-hsiao/testcafe-browser-provider-cbt",
+  "homepage": "https://github.com/william-hsiao/testcafe-browser-provider-cbt",
   "author": {
     "name": "William Hsiao",
     "email": "william.hsiao.25@gmail.com",
@@ -30,7 +30,8 @@
     "cbt_tunnels": "^0.9.9",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "selenium-webdriver": "^4.0.0-alpha.1"
+    "selenium-webdriver": "^4.0.0-alpha.1",
+    "shortid": "^2.2.14"
   },
   "devDependencies": {
     "babel-eslint": "^6.1.2",
@@ -45,7 +46,6 @@
     "gulp-eslint": "^3.0.1",
     "gulp-mocha": "^6.0.0",
     "node-version": "^1.0.0",
-    "publish-please": "^5.4.3",
-    "shortid": "^2.2.14"
+    "publish-please": "^5.4.3"
   }
 }

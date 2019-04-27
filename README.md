@@ -1,6 +1,6 @@
 # testcafe-browser-provider-cbt
 
-[![Build Status](https://travis-ci.org/william-hsiao/testcafe-browser-provider-crossbrowsertesting.svg)](https://travis-ci.org/william-hsiao/testcafe-browser-provider-crossbrowsertesting)
+[![Build Status](https://travis-ci.org/william-hsiao/testcafe-browser-provider-cbt.svg)](https://travis-ci.org/william-hsiao/testcafe-browser-provider-cbt)
 
 This is the **CrossBrowserTesting** browser provider plugin for [TestCafe](http://devexpress.github.io/testcafe).
 
