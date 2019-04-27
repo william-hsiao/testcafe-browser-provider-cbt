@@ -1,41 +1,8 @@
 /* eslint-disable camelcase */
+const webdriver = require('selenium-webdriver');
 
-// Accepted Timezones: https://help.crossbrowsertesting.com/selenium-testing/resources/list-of-timezones/
-const timezones = [
-  'GMT',
-  'GMT-01:00',
-  'GMT-02:00',
-  'GMT-03:00',
-  'GMT-03:30',
-  'GMT-04:00',
-  'GMT-05:00',
-  'GMT-06:00',
-  'GMT-07:00',
-  'GMT-08:00',
-  'GMT-09:00',
-  'GMT-10:00',
-  'GMT-11:00',
-  'GMT-12:00',
-  'GMT+01:00',
-  'GMT+02:00',
-  'GMT+03:00',
-  'GMT+03:30',
-  'GMT+04:00',
-  'GMT+04:30',
-  'GMT+05:00',
-  'GMT+05:30',
-  'GMT+05:45',
-  'GMT+06:00',
-  'GMT+06:30',
-  'GMT+07:00',
-  'GMT+08:00',
-  'GMT+09:00',
-  'GMT+09:30',
-  'GMT+10:00',
-  'GMT+11:00',
-  'GMT+12:00',
-  'GMT+13:00',
-];
+import { cbtHub, timezones } from './utils';
+
 
 // List of available capabilities: https://help.crossbrowsertesting.com/selenium-testing/getting-started/crossbrowsertesting-automation-capabilities/
 export const cbtCapabilities = (id, browserString) => {
@@ -89,3 +56,24 @@ export const cbtCapabilities = (id, browserString) => {
 
   return capabilities;
 };
+
+export async function launchBrowser(id, pageUrl, browserName, connector) {
+  const capabilities = cbtCapabilities(id, browserName);
+
+  try {
+    const browser = new webdriver.Builder()
+      .usingServer(cbtHub)
+      .withCapabilities(capabilities)
+      .build();
+
+    await browser.getSession().then(session => {
+      connector.openedBrowsersId[id] = session.id_;
+    });
+
+    await browser.get(pageUrl);
+
+    connector.openedBrowsers[id] = browser;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
