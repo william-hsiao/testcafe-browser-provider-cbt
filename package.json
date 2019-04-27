@@ -1,12 +1,13 @@
 {
-  "name": "testcafe-browser-provider-crossbrowsertesting",
+  "name": "testcafe-browser-provider-cross-browser-testing",
   "version": "1.0.0",
-  "description": "crossbrowsertesting TestCafe browser provider plugin.",
+  "description": "CrossBrowserTesting TestCafe browser provider plugin.",
   "repository": "https://github.com/william-hsiao/testcafe-browser-provider-crossbrowsertesting",
   "homepage": "https://crossbrowsertesting.com",
   "author": {
     "name": "William Hsiao",
-    "email": "william.hsiao.25@gmail.com"
+    "email": "william.hsiao.25@gmail.com",
+    "url": "http://william-hsiao.com"
   },
   "main": "lib/index",
   "files": [
@@ -39,12 +40,12 @@
     "babel-preset-es2015-loose": "^7.0.0",
     "babel-preset-stage-3": "^6.11.0",
     "del": "^2.0.0",
-    "gulp": "^3.9.0",
+    "gulp": "^4.0.1",
     "gulp-babel": "^6.1.2",
     "gulp-eslint": "^3.0.1",
-    "gulp-mocha": "^3.0.1",
+    "gulp-mocha": "^6.0.0",
     "node-version": "^1.0.0",
-    "publish-please": "^2.1.4",
+    "publish-please": "^5.4.3",
     "shortid": "^2.2.14"
   }
 }

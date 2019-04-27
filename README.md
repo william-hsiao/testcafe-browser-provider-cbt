@@ -6,21 +6,27 @@ This is the **crossbrowsertesting** browser provider plugin for [TestCafe](http:
 ## Install
 
 ```
-npm install testcafe-browser-provider-crossbrowsertesting
+npm install testcafe-browser-provider-cross-browser-testing
 ```
 
 ## Usage
 
+Before using this plugin, please set your username/email address and authentication key to their respective environment variables `CBT_USERNAME` and `CBT_AUTHKEY`.
+
+```
+export CBT_USERNAME=/* Your CrossBrowserTesting Username */
+export CBT_AUTHKEY=/* Your CrossBrowserTesting Authkey */
+```
 
 You can determine the available browser aliases by running
 ```
-testcafe -b crossbrowsertesting
+testcafe -b cross-browser-testing
 ```
 
 When you run tests from the command line, use the alias when specifying browsers:
 
 ```
-testcafe crossbrowsertesting:browser1 'path/to/test/file.js'
+testcafe "cross-browser-testing:Chrome@73:Windows 10" 'path/to/test/file.js'
 ```
 
 
@@ -30,7 +36,7 @@ When you use API, pass the alias to the `browsers()` method:
 testCafe
     .createRunner()
     .src('path/to/test/file.js')
-    .browsers('crossbrowsertesting:browser1')
+    .browsers('cross-browser-testing:Chrome@73:Windows 10')
     .run();
 ```
 
