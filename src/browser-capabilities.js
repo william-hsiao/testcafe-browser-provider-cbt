@@ -38,14 +38,14 @@ const timezones = [
 ];
 
 // List of available capabilities: https://help.crossbrowsertesting.com/selenium-testing/getting-started/crossbrowsertesting-automation-capabilities/
-export const cbtCapabilities = (id, browserString, connectionConfig) => {
+export const cbtCapabilities = (id, browserString) => {
   const [, browserName, version, platform] = /([A-z0-9._ -]*)@([A-z0-9._ -]*):([A-z0-9._ -]*)/g.exec(browserString);
   
   let capabilities = {
     name: process.env.CBT_RUN_NAME || `Testcafe #${id}`,
-    username: connectionConfig.username,
-    password: connectionConfig.authkey,
-    tunnel_name: connectionConfig.tunnelName,
+    username: process.env.CBT_USERNAME,
+    password: process.env.CBT_AUTHKEY,
+    tunnel_name: process.env.CBT_TUNNEL_NAME,
   };
 
   // Mobile Chrome@6.0:Nexus 9

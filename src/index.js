@@ -1,10 +1,9 @@
-/* eslint-disable */
-import cbtTunnels from 'cbt_tunnels';
-import webdriver from 'selenium-webdriver';
+const webdriver = require('selenium-webdriver');
+const request = require('request-promise');
+const cbtTunnels = require('cbt_tunnels');
+const shortid = require('shortid');
+
 import { cbtCapabilities } from './browser-capabilities';
-import { fetchCBTBrowsers } from './browser-list';
-import { tunnelOptions } from './tunnel-options';
-import { setScore } from './set-score';
 
 const cbtHub = 'http://hub.crossbrowsertesting.com:80/wd/hub';
 
@@ -12,58 +11,123 @@ export default {
   openedBrowsers: {},
   openedBrowsersId: {},
   availableBrowserNames: [],
+  launchedTunnel: false,
 
   // Multiple browsers support
   isMultiBrowser: true,
 
+  async _fetchCBTBrowsers() {
+    return request({
+      uri: 'http://crossbrowsertesting.com/api/v3/selenium/browsers',
+      json: true,
+      transform: (body) => {
+        const browserList = [];
+    
+        body.forEach(item => {
+          item.browsers.forEach(browser => {
+            if (item.device === 'mobile') {
+              browserList.push(`Mobile ${browser.caps.browserName}@${item.caps.platformVersion}:${item.caps.deviceName}`);
+            } else {
+              browserList.push(`${browser.caps.browserName}@${browser.caps.version}:${item.caps.platform}`);
+            }
+          });
+        });
+    
+        return browserList;
+      }
+    });
+  },
+
+  async _launchBrowser(id, pageUrl, browserName) {
+    const capabilities = cbtCapabilities(id, browserName);
+
+    try {
+      const browser = new webdriver.Builder()
+        .usingServer(cbtHub)
+        .withCapabilities(capabilities)
+        .build();
+
+      await browser.getSession().then(session => {
+        this.openedBrowsersId[id] = session.id_;
+      });
+
+      await browser.get(pageUrl);
+
+      this.openedBrowsers[id] = browser;
+    } catch (error) {
+      throw new Error(error);
+    }
+  },
+
+  async _getTunnelID() {
+    if (!process.env.CBT_TUNNEL_NAME) return null;
+
+    return request({
+      method: 'GET',
+      uri: 'https://crossbrowsertesting.com/api/v3/tunnels?active=true',
+      auth: {
+        user: process.env.CBT_USERNAME,
+        pass: process.env.CBT_AUTHKEY,
+      },
+      json: true,
+      transform: body => {
+        const tunnel = body.tunnels.find(_tunnel => _tunnel.tunnel_name === process.env.CBT_TUNNEL_NAME);
+
+        return tunnel ? tunnel.tunnel_id : null;
+      }
+    });
+  },
+
+  async _setScore(id, score) {
+    if (!id) return;
+  
+    request({
+      method: 'PUT',
+      uri: 'https://crossbrowsertesting.com/api/v3/selenium/' + id,
+      body: { action: 'set_score', score: score },
+      auth: {
+        user: process.env.CBT_USERNAME,
+        pass: process.env.CBT_AUTHKEY,
+      },
+      json: true,
+    });
+  },
+
   // Required - must be implemented
   // Browser control
   async openBrowser(id, pageUrl, browserName) {
-    console.log('Opening Browser');
-    const cbtUsername = process.env.CBT_USERNAME;
-    const cbtAuthKey = process.env.CBT_AUTHKEY;
-
-    // console.log(id);
-
-    const connectionConfig = {
-      username: cbtUsername,
-      authkey: cbtAuthKey,
-      tunnelName: `testcafe_run_${id}`,
-    };
-
-    cbtTunnels.start(tunnelOptions(connectionConfig), async (err) => {
-      if (err) throw new Error(err);
-
-      const capabilities = cbtCapabilities(id, browserName, connectionConfig);
-
-      try {
-        const browser = new webdriver.Builder()
-          .usingServer(cbtHub)
-          .withCapabilities(capabilities)
-          .build();
-
-        await browser.getSession().then(session => {
-          this.openedBrowsersId[id] = session.id_;
+    if (!process.env.CBT_TUNNEL_NAME)
+      process.env.CBT_TUNNEL_NAME = `testcafe-${shortid.generate()}`;
+  
+    request({
+      method: 'GET',
+      uri: 'https://crossbrowsertesting.com/api/v3/tunnels?active=true',
+      auth: {
+        user: process.env.CBT_USERNAME,
+        pass: process.env.CBT_AUTHKEY,
+      },
+      json: true,
+    }).then(async (res) => {
+      const tunnel = res.tunnels.find(_tunnel => _tunnel.tunnel_name === process.env.CBT_TUNNEL_NAME);
+  
+      if (!tunnel) {
+        this.launchedTunnel = true;
+        await cbtTunnels.start({
+          username: process.env.CBT_USERNAME,
+          authkey: process.env.CBT_AUTHKEY,
+          tunnelname: process.env.CBT_TUNNEL_NAME,
+        }, err => {
+          if (err) throw new Error(err);
+          this._launchBrowser(id, pageUrl, browserName);
         });
-
-        await browser.get(pageUrl);
-
-        this.openedBrowsers[id] = browser;
-      } catch (error) {
-        throw new Error(error);
+      } else {
+        this._launchBrowser(id, pageUrl, browserName);
       }
     });
   },
 
   async closeBrowser(id) {
-    console.log('Closing Browser');
-    console.log(this.openedBrowsers);
     await this.openedBrowsers[id].quit();
-    cbtTunnels.stop();
-    setScore(this.openedBrowsersId[id], 'pass', {
-      username: process.env.CBT_USERNAME,
-      authkey: process.env.CBT_AUTHKEY,
-    });
 
     delete this.openedBrowsers[id];
     delete this.openedBrowsersId[id];
@@ -76,11 +140,27 @@ export default {
       throw new Error('Authentication Failed: Please set CBT_USERNAME and CBT_AUTHKEY');
     }
 
-    this.availableBrowserNames = await fetchCBTBrowsers();
+    this.availableBrowserNames = await this._fetchCBTBrowsers();
   },
 
   async dispose() {
-    return;
+    if (this.launchedTunnel) {
+      if (!process.env.CBT_TUNNEL_NAME) return;
+
+      const tunnelID = await this._getTunnelID();
+
+      if (tunnelID) {
+        await request({
+          method: 'DELETE',
+          uri: `https://crossbrowsertesting.com/api/v3/tunnels/${tunnelID}`,
+          auth: {
+            user: process.env.CBT_USERNAME,
+            pass: process.env.CBT_AUTHKEY,
+          },
+          json: true,
+        });
+      }
+    }
   },
 
   // Browser names handling
@@ -104,4 +184,11 @@ export default {
       'The screenshot functionality is not supported by the "crossbrowsertesting" browser provider.'
     );
   },
+
+  async reportJobResult(id, jobResult, jobData) {
+    if (jobData.total === jobData.passed)
+      this._setScore(this.openedBrowsersId[id], 'pass');
+    else
+      this._setScore(this.openedBrowsersId[id], 'fail');
+  }
 };
