@@ -1,8 +1,11 @@
-const shortid = require('shortid');
-
 import { launchBrowser } from './cbt/browsers';
 import { fetchCBTBrowsers } from './cbt/fetch-browsers';
-import { getTunnel, openTunnel, closeTunnel } from './cbt/tunnels';
+import {
+  generateTunnelName,
+  getTunnel,
+  openTunnel,
+  closeTunnel
+} from './cbt/tunnels';
 import { setScore } from './cbt/set-score';
 
 export default {
@@ -13,9 +16,8 @@ export default {
   isMultiBrowser: true,
 
   async openBrowser(id, pageUrl, browserName) {
-    if (!process.env.CBT_TUNNEL_NAME)
-      process.env.CBT_TUNNEL_NAME = `testcafe-${shortid.generate()}`;
-  
+    if (!process.env.CBT_TUNNEL_NAME) await generateTunnelName();
+
     const tunnel = await getTunnel();
 
     if (!tunnel) {
@@ -38,7 +40,9 @@ export default {
 
   async init() {
     if (!(process.env.CBT_USERNAME && process.env.CBT_AUTHKEY)) {
-      throw new Error('Authentication Failed: Please set CBT_USERNAME and CBT_AUTHKEY');
+      throw new Error(
+        'Authentication Failed: Please set CBT_USERNAME and CBT_AUTHKEY'
+      );
     }
 
     this.availableBrowserNames = await fetchCBTBrowsers();
@@ -75,7 +79,6 @@ export default {
   async reportJobResult(id, jobResult, jobData) {
     if (jobData.total === jobData.passed)
       setScore(this.openedBrowsersId[id], 'pass');
-    else
-      setScore(this.openedBrowsersId[id], 'fail');
+    else setScore(this.openedBrowsersId[id], 'fail');
   }
 };
