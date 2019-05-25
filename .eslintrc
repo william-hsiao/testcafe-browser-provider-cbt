@@ -46,7 +46,6 @@
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "max-nested-callbacks": ["error", 3],
     "new-parens": "error",
-    "newline-after-var": ["error", "always"],
     "no-lonely-if": "error",
     "no-multiple-empty-lines": ["error", { "max": 2 }],
     "no-nested-ternary": "error",

@@ -1,6 +1,7 @@
 const cbtTunnels = require('cbt_tunnels');
 const request = require('request-promise');
 const shortid = require('shortid');
+const fs = require('fs');
 
 export function generateTunnelName() {
   process.env.CBT_TUNNEL_NAME = `testcafe-${shortid.generate()}`;
@@ -43,12 +44,24 @@ export async function getTunnelID() {
 }
 
 export async function openTunnel(callback) {
-  await cbtTunnels.start(
+  let importedConfig = {};
+  if (process.env.CBT_TUNNEL_CONFIG_PATH) {
+    try {
+      const raw = fs.readFileSync(process.env.CBT_TUNNEL_CONFIG_PATH);
+      importedConfig = JSON.parse(raw);
+    } catch (e) {
+      // importedConfig = {};
+    }
+  }
+
+  await cbtTunnels.start(Object.assign(
+    importedConfig,
     {
       username: process.env.CBT_USERNAME,
       authkey: process.env.CBT_AUTHKEY,
       tunnelname: process.env.CBT_TUNNEL_NAME
-    },
+    }
+  ),
     err => {
       if (err) throw new Error(err);
       callback();

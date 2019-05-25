@@ -4,6 +4,12 @@
 
 This is the **CrossBrowserTesting** browser provider plugin for [TestCafe](http://devexpress.github.io/testcafe).
 
+Features:
+
+- Posts results back to CBT
+- Opens a local connection to CBT Browsers
+- CBT Browser & Tunnel configuration
+
 ## Install
 
 ```
@@ -40,6 +46,28 @@ testCafe
   .browsers('cbt:Chrome@73:Windows 10')
   .run();
 ```
+
+# Local Server Testing
+
+This plugin automatically opens a local connection to CBT using named [cbt_tunnels](). This allows you run multiple tests with different builds at the same time without interfering with each other. The connection will automatically close at the end of the test.
+
+If you already have a CBT Tunnel conneciton open that you would like to use, make sure you initialize it with a tunnel name and store the name in the environment variable `CBT_TUNNEL_NAME`. After the test ends, it will NOT close your connection.
+
+# Configuration
+
+It is possible to set custom configurations for the CBT Browser instance as well as the tunnel
+
+### CBT Browser
+
+You can set the browser capabilities by creating a JSON file and store the filepath in the environment variable `CBT_BROWSER_CONFIG_PATH`.
+
+You can find the full list of capabilities at: https://help.crossbrowsertesting.com/selenium-testing/getting-started/crossbrowsertesting-automation-capabilities/
+
+### CBT Tunnels
+
+You can set addtional settings for the CBT Tunnel by creating a JSON file and store the filepath in the environment variable `CBT_TUNNEL_CONFIG_PATH`.
+
+You can find the full list of options at: https://github.com/crossbrowsertesting/cbt-tunnel-nodejs
 
 ## Author
 
