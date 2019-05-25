@@ -69,6 +69,11 @@ You can set addtional settings for the CBT Tunnel by creating a JSON file and st
 
 You can find the full list of options at: https://github.com/crossbrowsertesting/cbt-tunnel-nodejs
 
+# Taking Snapshots
+
+You can take a snapshot of the CBT session by using the Testcafe `takeScreenshot()` method. Currently, the screenshot is not saved locally.
+When starting Testcafe, please set an arbitrary screenshot filepath such as `-s './'` if you are using the command line or `runner.screenshots('./');` if you are using the programming interface.
+
 ## Author
 
 William Hsiao

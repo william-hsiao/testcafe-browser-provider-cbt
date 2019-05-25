@@ -7,6 +7,7 @@ import {
   closeTunnel,
 } from './cbt/tunnels';
 import { setScore } from './cbt/set-score';
+import { takeSnapshot } from './cbt/take-snapshot';
 
 export default {
   availableBrowserNames: [],
@@ -68,10 +69,8 @@ export default {
     await resizeWindow(this.openedBrowsers[id], width, height);
   },
 
-  async takeScreenshot(/* id, screenshotPath, pageWidth, pageHeight */) {
-    this.reportWarning(
-      'The screenshot functionality is not supported by the "crossbrowsertesting" browser provider.'
-    );
+  async takeScreenshot(id) {
+    await takeSnapshot(this.openedBrowsersId[id]);
   },
 
   async reportJobResult(id, jobResult, jobData) {

@@ -1,7 +1,7 @@
 const request = require('request-promise');
 
 export async function setScore(id, score) {
-  request({
+  return request({
     method: 'PUT',
     uri: 'https://crossbrowsertesting.com/api/v3/selenium/' + id,
     body: { action: 'set_score', score: score },
