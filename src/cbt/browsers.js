@@ -86,3 +86,7 @@ export async function launchBrowser(id, pageUrl, browserName, connector) {
     throw new Error(error);
   }
 }
+
+export async function resizeWindow(browser, width, height) {
+  await browser.manage().window().setSize(width, height);
+}

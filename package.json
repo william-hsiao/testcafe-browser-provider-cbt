@@ -30,7 +30,7 @@
     "cbt_tunnels": "^0.9.9",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
-    "selenium-webdriver": "^4.0.0-alpha.1",
+    "selenium-webdriver": "^3.6.0",
     "shortid": "^2.2.14"
   },
   "devDependencies": {

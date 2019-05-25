@@ -1,10 +1,10 @@
-import { launchBrowser } from './cbt/browsers';
+import { launchBrowser, resizeWindow } from './cbt/browsers';
 import { fetchCBTBrowsers } from './cbt/fetch-browsers';
 import {
   generateTunnelName,
   getTunnel,
   openTunnel,
-  closeTunnel
+  closeTunnel,
 } from './cbt/tunnels';
 import { setScore } from './cbt/set-score';
 
@@ -64,10 +64,8 @@ export default {
     return this.availableBrowserNames.includes(browserName);
   },
 
-  async resizeWindow(/* id, width, height, currentWidth, currentHeight */) {
-    this.reportWarning(
-      'The window resize functionality is not supported by the "crossbrowsertesting" browser provider.'
-    );
+  async resizeWindow(id, width, height) {
+    await resizeWindow(this.openedBrowsers[id], width, height);
   },
 
   async takeScreenshot(/* id, screenshotPath, pageWidth, pageHeight */) {
